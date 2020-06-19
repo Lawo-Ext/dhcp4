@@ -149,12 +149,15 @@ func (p *Packet) StripOptions() {
 }
 
 // Creates a request packet that a Client would send to a server.
-func RequestPacket(mt MessageType, chAddr net.HardwareAddr, cIAddr net.IP, xId []byte, broadcast bool, options []Option) Packet {
+func RequestPacket(mt MessageType, chAddr net.HardwareAddr, cIAddr net.IP, GIAddr net.IP, xId []byte, broadcast bool, options []Option) Packet {
 	p := NewPacket(BootRequest)
 	p.SetCHAddr(chAddr)
 	p.SetXId(xId)
 	if cIAddr != nil {
 		p.SetCIAddr(cIAddr)
+	}
+	if GIAddr != nil {
+		p.SetGIAddr(GIAddr)
 	}
 	p.SetBroadcast(broadcast)
 	p.AddOption(OptionDHCPMessageType, []byte{byte(mt)})
@@ -325,9 +328,9 @@ const (
 	OptionDomainSearch OptionCode = 119
 
 	OptionClasslessRouteFormat OptionCode = 121
-	
+
 	// From RFC3942 - Options Used by PXELINUX
-	OptionPxelinuxMagic OptionCode = 208
+	OptionPxelinuxMagic      OptionCode = 208
 	OptionPxelinuxConfigfile OptionCode = 209
 	OptionPxelinuxPathprefix OptionCode = 210
 	OptionPxelinuxReboottime OptionCode = 211
